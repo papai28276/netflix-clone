@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Netflix Clone</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">NETFLIX</div>
+    <nav>
+      <ul>
+        <li>Home</li>
+        <li>TV Shows</li>
+        <li>Movies</li>
+        <li>Games</li>
+        <li>New & Popular</li>
+        <li>My List</li>
+        <li>Browse by Languages</li>
+      </ul>
+    </nav>
+    <input type="text" id="searchInput" placeholder="Search..." />
+    <div class="nav-icons">
+      <span>🔍</span>
+      <span>Children</span>
+      <span>🔔</span>
+      <span>🙂</span>
+      <button id="themeToggle">🌙</button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+  <div class="hero-background">
+    <img src="images/ama.webp" alt="Amy Bradley" />
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h4>N SERIES</h4>
+    <h1>AMY BRADLEY IS MISSING</h1>
+    <p>Murdered. Trafficked. Lost at sea. When a 23-year-old vanishes from a cruise in 1998, theories abound...</p>
+    <div class="hero-buttons">
+      <button class="btn play">▶ Play</button>
+      <button class="btn info">ℹ More Info</button>
+    </div>
+  </div>
+</section>
+
+
+
+
+  <!-- Genre Filters -->
+  <div class="genre-filter">
+    <button onclick="filterByGenre('All')">All</button>
+    <button onclick="filterByGenre('Action')">Action</button>
+    <button onclick="filterByGenre('Drama')">Drama</button>
+    <button onclick="filterByGenre('Thriller')">Thriller</button>
+  </div>
+
+  <!-- Carousel 1 -->
+  <section class="carousel">
+    <h2>Top 10 in India Today</h2>
+    <div class="movie-row">
+      <div class="movie-card"><img src="https://i.ibb.co/hYWKvZz/movie1.jpg" alt="Movie 1" /></div>
+      <div class="movie-card"><img src="https://i.ibb.co/XFbPvqL/movie2.jpg" alt="Movie 2" /></div>
+      <div class="movie-card"><img src="https://i.ibb.co/k3PfR9h/movie3.jpg" alt="Movie 3" /></div>
+      <div class="movie-card"><img src="https://i.ibb.co/XVTRdcD/movie4.jpg" alt="Movie 4" /></div>
+      <div class="movie-card"><img src="https://i.ibb.co/YR9Sz8s/movie5.jpg" alt="Movie 5" /></div>
+      <div class="movie-card"><img src="https://i.ibb.co/zhzfcM4/movie6.jpg" alt="Movie 6" /></div>
+    </div>
+  </section>
+
+  <!-- Carousel 2 -->
+  <section class="carousel">
+    <h2>We Think You’ll Love These</h2>
+    <div class="movie-row" id="suggested-movies">
+      <!-- Dynamically populated or add cards manually -->
+    </div>
+    <!-- Skeleton Loader -->
+  <div class="skeleton-loader">
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+  </div>
+  </section>
+
+  <!-- Modal Controls -->
+  <div class="modal-controls">
+    <label for="language">Language:</label>
+    <select id="language">
+      <option>English</option>
+      <option>Hindi</option>
+      <option>Japanese</option>
+    </select>
+
+    <label for="subtitle">Subtitles:</label>
+    <select id="subtitle">
+      <option>Off</option>
+      <option>English</option>
+      <option>Hindi</option>
+    </select>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="movieModal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">×</span>
+      <h2 id="modalTitle">Movie Title</h2>
+      <iframe id="modalTrailer" width="100%" height="250" frameborder="0" allowfullscreen></iframe>
+      <button onclick="toggleFavorite()">❤️ Add to My List</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select Profile - Netflix Clone</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="login-body">
+  <div class="profile-container">
+    <h1>Who's Watching?</h1>
+    <div class="profiles">
+      <div class="profile" onclick="selectProfile('Snehashis')">
+        <img src="https://i.ibb.co/7vJhC1q/user1.png" alt="User" />
+        <p>Snehashis</p>
+      </div>
+      <div class="profile" onclick="selectProfile('Guest')">
+        <img src="https://i.ibb.co/x65sLsF/user2.png" alt="User" />
+        <p>Guest</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    function selectProfile(name) {
+      localStorage.setItem("activeProfile", name);
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
