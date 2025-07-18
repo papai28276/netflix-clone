@@ -3,599 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+
     <title>StreamFlix - Watch TV Shows and Movies Online</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: "Helvetica Neue", Arial, sans-serif;
-        background-color: #000;
-        color: #fff;
-        overflow-x: hidden;
-      }
-
-      /* Navigation */
-      .navbar {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        background: linear-gradient(
-          180deg,
-          rgba(0, 0, 0, 0.7) 10%,
-          transparent
-        );
-        padding: 20px 4%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        z-index: 1000;
-        transition: background-color 0.3s ease;
-      }
-
-      .navbar.scrolled {
-        background-color: #141414;
-      }
-
-      .logo {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: #e50914;
-        cursor: pointer;
-      }
-
-      .nav-links {
-        display: flex;
-        list-style: none;
-        gap: 30px;
-      }
-
-      .nav-links a {
-        color: #fff;
-        text-decoration: none;
-        font-size: 1rem;
-        transition: color 0.3s ease;
-      }
-
-      .nav-links a:hover {
-        color: #b3b3b3;
-      }
-
-      .nav-right {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-      }
-
-      .search-icon,
-      .notifications,
-      .profile {
-        cursor: pointer;
-        padding: 5px;
-      }
-
-      .btn {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-      }
-
-      .btn-primary {
-        background-color: #e50914;
-        color: white;
-      }
-
-      .btn-primary:hover {
-        background-color: #f40612;
-      }
-
-      .btn-secondary {
-        background-color: transparent;
-        color: white;
-        border: 1px solid #fff;
-      }
-
-      .btn-secondary:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-      }
-
-      /* Hero Section */
-      .hero {
-        height: 100vh;
-        background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-          url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23141414" width="1200" height="800"/><rect fill="%23e50914" x="100" y="100" width="400" height="300" opacity="0.1"/><rect fill="%23ffffff" x="600" y="200" width="500" height="400" opacity="0.05"/></svg>');
-        background-size: cover;
-        background-position: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        position: relative;
-      }
-
-      .hero-content {
-        max-width: 800px;
-        padding: 0 20px;
-      }
-
-      .hero h1 {
-        font-size: 3.5rem;
-        margin-bottom: 20px;
-        font-weight: 700;
-      }
-
-      .hero p {
-        font-size: 1.5rem;
-        margin-bottom: 30px;
-        color: #b3b3b3;
-      }
-
-      .hero-buttons {
-        display: flex;
-        gap: 20px;
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-
-      .hero .btn {
-        padding: 15px 30px;
-        font-size: 1.2rem;
-        border-radius: 6px;
-      }
-
-      /* Content Sections */
-      .content-section {
-        padding: 80px 4%;
-        border-bottom: 8px solid #222;
-      }
-
-      .content-row {
-        display: flex;
-        align-items: center;
-        max-width: 1200px;
-        margin: 0 auto;
-        gap: 50px;
-      }
-
-      .content-row:nth-child(even) {
-        flex-direction: row-reverse;
-      }
-
-      .content-text {
-        flex: 1;
-      }
-
-      .content-text h2 {
-        font-size: 3rem;
-        margin-bottom: 20px;
-        font-weight: 700;
-      }
-
-      .content-text p {
-        font-size: 1.5rem;
-        color: #b3b3b3;
-        line-height: 1.4;
-      }
-
-      .content-media {
-        flex: 1;
-        text-align: center;
-      }
-
-      .content-media img {
-        max-width: 100%;
-        height: auto;
-      }
-
-      /* Movie Grid */
-      .movie-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 20px;
-        padding: 20px;
-      }
-
-      .movie-card {
-        background: #333;
-        border-radius: 8px;
-        overflow: hidden;
-        transition: transform 0.3s ease;
-        cursor: pointer;
-      }
-
-      .movie-card:hover {
-        transform: scale(1.05);
-      }
-
-      .movie-card img {
-        width: 100%;
-        height: 300px;
-        object-fit: cover;
-      }
-
-      .movie-info {
-        padding: 15px;
-      }
-
-      .movie-title {
-        font-size: 1.1rem;
-        font-weight: bold;
-        margin-bottom: 5px;
-      }
-
-      .movie-year {
-        color: #b3b3b3;
-        font-size: 0.9rem;
-      }
-
-      /* Sign In Form */
-      .signin-container {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-          url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23141414" width="1200" height="800"/></svg>');
-        background-size: cover;
-      }
-
-      .signin-form {
-        background: rgba(0, 0, 0, 0.8);
-        padding: 60px;
-        border-radius: 4px;
-        max-width: 450px;
-        width: 100%;
-      }
-
-      .signin-form h1 {
-        margin-bottom: 30px;
-        font-size: 2rem;
-      }
-
-      .form-group {
-        margin-bottom: 20px;
-      }
-
-      .form-group input {
-        width: 100%;
-        padding: 16px;
-        border: none;
-        border-radius: 4px;
-        background: #333;
-        color: #fff;
-        font-size: 1rem;
-      }
-
-      .form-group input:focus {
-        outline: none;
-        background: #454545;
-      }
-
-      /* Browse Page */
-      .browse-header {
-        padding: 100px 4% 50px;
-        background: linear-gradient(135deg, #e50914 0%, #141414 100%);
-      }
-
-      .browse-header h1 {
-        font-size: 3rem;
-        margin-bottom: 20px;
-      }
-
-      .category-section {
-        padding: 40px 4%;
-      }
-
-      .category-title {
-        font-size: 1.5rem;
-        margin-bottom: 20px;
-        font-weight: 600;
-      }
-
-      .movie-row {
-        display: flex;
-        gap: 15px;
-        overflow-x: auto;
-        padding: 10px 0;
-      }
-
-      .movie-row::-webkit-scrollbar {
-        display: none;
-      }
-
-      .movie-row .movie-card {
-        min-width: 200px;
-      }
-
-      /* Footer */
-      .footer {
-        background: #000;
-        padding: 50px 4%;
-        color: #b3b3b3;
-      }
-
-      .footer-content {
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      .footer-links {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 30px;
-        margin-bottom: 30px;
-      }
-
-      .footer-links a {
-        color: #b3b3b3;
-        text-decoration: none;
-        margin-bottom: 10px;
-        display: block;
-      }
-
-      .footer-links a:hover {
-        color: #fff;
-      }
-
-      /* Responsive */
-      @media (max-width: 768px) {
-        .nav-links {
-          display: none;
-        }
-
-        .hero h1 {
-          font-size: 2.5rem;
-        }
-
-        .hero p {
-          font-size: 1.2rem;
-        }
-
-        .content-row {
-          flex-direction: column;
-          text-align: center;
-        }
-
-        .content-text h2 {
-          font-size: 2rem;
-        }
-
-        .signin-form {
-          padding: 30px;
-        }
-
-        .movie-grid {
-          grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        }
-      }
-
-      /* Page States */
-      .page {
-        display: none;
-      }
-
-      .page.active {
-        display: block;
-      }
-
-      /* Video Player */
-      .video-player {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.9);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 2000;
-      }
-
-      .video-container {
-        width: 90%;
-        max-width: 1200px;
-        background: #000;
-        border-radius: 8px;
-        overflow: hidden;
-        position: relative;
-      }
-
-      .video-container video {
-        width: 100%;
-        height: 400px;
-        background: #222;
-      }
-
-      .close-video {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: rgba(0, 0, 0, 0.7);
-        color: white;
-        border: none;
-        padding: 10px;
-        cursor: pointer;
-        border-radius: 50%;
-        font-size: 1.2rem;
-      }
-
-      /* Profile Dropdown */
-      .profile-dropdown {
-        position: absolute;
-        top: 60px;
-        right: 0;
-        background: #141414;
-        border: 1px solid #333;
-        border-radius: 4px;
-        padding: 10px 0;
-        display: none;
-        min-width: 150px;
-      }
-
-      .profile-dropdown a {
-        display: block;
-        padding: 10px 15px;
-        color: #fff;
-        text-decoration: none;
-        transition: background-color 0.3s ease;
-      }
-
-      .profile-dropdown a:hover {
-        background-color: #333;
-      }
-
-      .profile-menu {
-        position: relative;
-      }
-
-      .profile-menu.active .profile-dropdown {
-        display: block;
-      }
-
-      /* Search Bar */
-      .search-container {
-        position: relative;
-      }
-
-      .search-bar {
-        position: absolute;
-        top: 40px;
-        right: 0;
-        background: #141414;
-        border: 1px solid #333;
-        border-radius: 4px;
-        padding: 10px;
-        display: none;
-        min-width: 300px;
-      }
-
-      .search-bar input {
-        width: 100%;
-        padding: 10px;
-        border: none;
-        border-radius: 4px;
-        background: #333;
-        color: #fff;
-        font-size: 1rem;
-      }
-
-      .search-bar input:focus {
-        outline: none;
-        background: #454545;
-      }
-
-      .search-container.active .search-bar {
-        display: block;
-      }
-
-      /* Notifications Dropdown */
-      .notifications-dropdown {
-        position: absolute;
-        top: 60px;
-        right: 0;
-        background: #141414;
-        border: 1px solid #333;
-        border-radius: 4px;
-        padding: 10px 0;
-        display: none;
-        min-width: 350px;
-        max-height: 400px;
-        overflow-y: auto;
-      }
-
-      .notification-item {
-        padding: 15px;
-        border-bottom: 1px solid #333;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .notification-item:last-child {
-        border-bottom: none;
-      }
-
-      .notification-item:hover {
-        background-color: #333;
-      }
-
-      .notification-icon {
-        font-size: 1.5rem;
-        flex-shrink: 0;
-      }
-
-      .notification-content {
-        flex: 1;
-      }
-
-      .notification-title {
-        font-weight: bold;
-        margin-bottom: 5px;
-      }
-
-      .notification-text {
-        color: #b3b3b3;
-        font-size: 0.9rem;
-      }
-
-      .notification-time {
-        color: #666;
-        font-size: 0.8rem;
-        margin-top: 5px;
-      }
-
-      .notifications-menu {
-        position: relative;
-      }
-
-      .notifications-menu.active .notifications-dropdown {
-        display: block;
-      }
-
-      .notification-badge {
-        position: absolute;
-        top: -5px;
-        right: -5px;
-        background: #e50914;
-        color: white;
-        border-radius: 50%;
-        width: 18px;
-        height: 18px;
-        font-size: 0.7rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-      }
-
-      .search-results {
-        margin-top: 10px;
-        max-height: 200px;
-        overflow-y: auto;
-      }
-
-      .search-result-item {
-        padding: 10px;
-        border-bottom: 1px solid #333;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
-
-      .search-result-item:hover {
-        background-color: #333;
-      }
-
-      .search-result-item:last-child {
-        border-bottom: none;
-      }
-    </style>
   </head>
   <body>
     <!-- Landing Page -->
@@ -1035,239 +445,237 @@
         </video>
       </div>
     </div>
+    <script>// Sample movie data
+const movies = {
+  trending: [
+    {
+      id: 1,
+      title: "Stranger Things",
+      year: "2022",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23e50914' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>ST</text></svg>",
+      description:
+        "A group of young friends witness supernatural forces and secret government exploits.",
+    },
+    {
+      id: 2,
+      title: "The Crown",
+      year: "2023",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23ffd700' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='black' font-size='20'>👑</text></svg>",
+      description:
+        "The gripping, decades-spanning inside story of Her Majesty Queen Elizabeth II.",
+    },
+    {
+      id: 3,
+      title: "Money Heist",
+      year: "2021",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23ff6b6b' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>💰</text></svg>",
+      description:
+        "An unusual group of robbers attempt to carry out the most perfect robbery in Spanish history.",
+    },
+    {
+      id: 4,
+      title: "Bridgerton",
+      year: "2022",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23ff69b4' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🌹</text></svg>",
+      description:
+        "The eight close-knit siblings of the Bridgerton family look for love and happiness in London high society.",
+    },
+    {
+      id: 5,
+      title: "Ozark",
+      year: "2022",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%234a90e2' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🏞️</text></svg>",
+      description:
+        "A financial advisor drags his family from Chicago to the Missouri Ozarks to launder money for a Mexican cartel.",
+    },
+  ],
+  action: [
+    {
+      id: 6,
+      title: "Extraction",
+      year: "2020",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23ff4500' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🔥</text></svg>",
+      description:
+        "A black-market mercenary who has nothing to lose is hired to rescue the kidnapped son of an imprisoned international crime lord.",
+    },
+    {
+      id: 7,
+      title: "The Old Guard",
+      year: "2020",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%232e8b57' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>⚔️</text></svg>",
+      description:
+        "A covert team of immortal mercenaries is suddenly exposed and must now fight to keep their identity a secret.",
+    },
+    {
+      id: 8,
+      title: "6 Underground",
+      year: "2019",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23dc143c' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>💥</text></svg>",
+      description:
+        "Six individuals from all around the globe, each the very best at what they do, have been chosen for their unique skills.",
+    },
+    {
+      id: 9,
+      title: "Triple Frontier",
+      year: "2019",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%238b4513' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🎯</text></svg>",
+      description:
+        "Struggling to make ends meet, former special ops soldiers reunite for a high-stakes heist.",
+    },
+    {
+      id: 10,
+      title: "Spenser Confidential",
+      year: "2020",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23696969' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🔍</text></svg>",
+      description:
+        "An ex-cop and his ex-con partner team up to take down Boston's most corrupt cops.",
+    },
+  ],
+  comedy: [
+    {
+      id: 11,
+      title: "The Kissing Booth",
+      year: "2018",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23ff1493' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>💋</text></svg>",
+      description:
+        "A high school student finds herself at the center of a love triangle when she runs a kissing booth at her school carnival.",
+    },
+    {
+      id: 12,
+      title: "To All the Boys",
+      year: "2018",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23ff69b4' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>💕</text></svg>",
+      description:
+        "A teenage girl's secret love letters are exposed and her love life goes from imaginary to out of control.",
+    },
+    {
+      id: 13,
+      title: "The Half of It",
+      year: "2020",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%2300ced1' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>📝</text></svg>",
+      description:
+        "A shy student helps the sweet jock woo a girl they both like, leading to an unexpected love triangle.",
+    },
+    {
+      id: 14,
+      title: "Always Be My Maybe",
+      year: "2019",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23ff6347' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🍜</text></svg>",
+      description:
+        "Everyone assumed childhood friends Sasha and Marcus would end up together, except Sasha and Marcus.",
+    },
+    {
+      id: 15,
+      title: "Murder Mystery",
+      year: "2019",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%239370db' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🔪</text></svg>",
+      description:
+        "A New York cop and his wife go on a European vacation to reinvigorate their marriage, but end up getting framed for murder.",
+    },
+  ],
+  documentary: [
+    {
+      id: 16,
+      title: "My Octopus Teacher",
+      year: "2020",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23008080' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🐙</text></svg>",
+      description:
+        "A filmmaker forges an unusual friendship with an octopus living in a South African kelp forest.",
+    },
+    {
+      id: 17,
+      title: "Tiger King",
+      year: "2020",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23ff8c00' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🐅</text></svg>",
+      description:
+        "A rivalry between big cat eccentrics takes a dark turn when a federal investigation threatens to destroy their empire.",
+    },
+    {
+      id: 18,
+      title: "The Social Dilemma",
+      year: "2020",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%231e90ff' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>📱</text></svg>",
+      description:
+        "Tech experts sound the alarm on the dangerous human impact of social networking.",
+    },
+    {
+      id: 19,
+      title: "Seaspiracy",
+      year: "2021",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23006400' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🌊</text></svg>",
+      description:
+        "Filmmaker Ali Tabrizi explores the environmental impact of fishing and challenges viewers to rethink their dietary choices.",
+    },
+    {
+      id: 20,
+      title: "The Last Dance",
+      year: "2020",
+      image:
+        "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23800080' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🏀</text></svg>",
+      description:
+        "Charting the rise of the 1990s Chicago Bulls, led by Michael Jordan, one of the most notable dynasties in sports history.",
+    },
+  ],
+};
 
-    <script>
-      // Sample movie data
-      const movies = {
-        trending: [
-          {
-            id: 1,
-            title: "Stranger Things",
-            year: "2022",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23e50914' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>ST</text></svg>",
-            description:
-              "A group of young friends witness supernatural forces and secret government exploits.",
-          },
-          {
-            id: 2,
-            title: "The Crown",
-            year: "2023",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23ffd700' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='black' font-size='20'>👑</text></svg>",
-            description:
-              "The gripping, decades-spanning inside story of Her Majesty Queen Elizabeth II.",
-          },
-          {
-            id: 3,
-            title: "Money Heist",
-            year: "2021",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23ff6b6b' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>💰</text></svg>",
-            description:
-              "An unusual group of robbers attempt to carry out the most perfect robbery in Spanish history.",
-          },
-          {
-            id: 4,
-            title: "Bridgerton",
-            year: "2022",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23ff69b4' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🌹</text></svg>",
-            description:
-              "The eight close-knit siblings of the Bridgerton family look for love and happiness in London high society.",
-          },
-          {
-            id: 5,
-            title: "Ozark",
-            year: "2022",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%234a90e2' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🏞️</text></svg>",
-            description:
-              "A financial advisor drags his family from Chicago to the Missouri Ozarks to launder money for a Mexican cartel.",
-          },
-        ],
-        action: [
-          {
-            id: 6,
-            title: "Extraction",
-            year: "2020",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23ff4500' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🔥</text></svg>",
-            description:
-              "A black-market mercenary who has nothing to lose is hired to rescue the kidnapped son of an imprisoned international crime lord.",
-          },
-          {
-            id: 7,
-            title: "The Old Guard",
-            year: "2020",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%232e8b57' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>⚔️</text></svg>",
-            description:
-              "A covert team of immortal mercenaries is suddenly exposed and must now fight to keep their identity a secret.",
-          },
-          {
-            id: 8,
-            title: "6 Underground",
-            year: "2019",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23dc143c' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>💥</text></svg>",
-            description:
-              "Six individuals from all around the globe, each the very best at what they do, have been chosen for their unique skills.",
-          },
-          {
-            id: 9,
-            title: "Triple Frontier",
-            year: "2019",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%238b4513' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🎯</text></svg>",
-            description:
-              "Struggling to make ends meet, former special ops soldiers reunite for a high-stakes heist.",
-          },
-          {
-            id: 10,
-            title: "Spenser Confidential",
-            year: "2020",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23696969' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🔍</text></svg>",
-            description:
-              "An ex-cop and his ex-con partner team up to take down Boston's most corrupt cops.",
-          },
-        ],
-        comedy: [
-          {
-            id: 11,
-            title: "The Kissing Booth",
-            year: "2018",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23ff1493' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>💋</text></svg>",
-            description:
-              "A high school student finds herself at the center of a love triangle when she runs a kissing booth at her school carnival.",
-          },
-          {
-            id: 12,
-            title: "To All the Boys",
-            year: "2018",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23ff69b4' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>💕</text></svg>",
-            description:
-              "A teenage girl's secret love letters are exposed and her love life goes from imaginary to out of control.",
-          },
-          {
-            id: 13,
-            title: "The Half of It",
-            year: "2020",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%2300ced1' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>📝</text></svg>",
-            description:
-              "A shy student helps the sweet jock woo a girl they both like, leading to an unexpected love triangle.",
-          },
-          {
-            id: 14,
-            title: "Always Be My Maybe",
-            year: "2019",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23ff6347' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🍜</text></svg>",
-            description:
-              "Everyone assumed childhood friends Sasha and Marcus would end up together, except Sasha and Marcus.",
-          },
-          {
-            id: 15,
-            title: "Murder Mystery",
-            year: "2019",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%239370db' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🔪</text></svg>",
-            description:
-              "A New York cop and his wife go on a European vacation to reinvigorate their marriage, but end up getting framed for murder.",
-          },
-        ],
-        documentary: [
-          {
-            id: 16,
-            title: "My Octopus Teacher",
-            year: "2020",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23008080' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🐙</text></svg>",
-            description:
-              "A filmmaker forges an unusual friendship with an octopus living in a South African kelp forest.",
-          },
-          {
-            id: 17,
-            title: "Tiger King",
-            year: "2020",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23ff8c00' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🐅</text></svg>",
-            description:
-              "A rivalry between big cat eccentrics takes a dark turn when a federal investigation threatens to destroy their empire.",
-          },
-          {
-            id: 18,
-            title: "The Social Dilemma",
-            year: "2020",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%231e90ff' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>📱</text></svg>",
-            description:
-              "Tech experts sound the alarm on the dangerous human impact of social networking.",
-          },
-          {
-            id: 19,
-            title: "Seaspiracy",
-            year: "2021",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23006400' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🌊</text></svg>",
-            description:
-              "Filmmaker Ali Tabrizi explores the environmental impact of fishing and challenges viewers to rethink their dietary choices.",
-          },
-          {
-            id: 20,
-            title: "The Last Dance",
-            year: "2020",
-            image:
-              "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'><rect fill='%23800080' width='200' height='300'/><text x='100' y='150' text-anchor='middle' fill='white' font-size='20'>🏀</text></svg>",
-            description:
-              "Charting the rise of the 1990s Chicago Bulls, led by Michael Jordan, one of the most notable dynasties in sports history.",
-          },
-        ],
-      };
+let currentUser = null;
+let myList = [];
+let currentMovie = null;
 
-      let currentUser = null;
-      let myList = [];
-      let currentMovie = null;
+// Page navigation
+function showPage(pageId) {
+  const pages = document.querySelectorAll(".page");
+  pages.forEach((page) => page.classList.remove("active"));
+  document.getElementById(pageId).classList.add("active");
 
-      // Page navigation
-      function showPage(pageId) {
-        const pages = document.querySelectorAll(".page");
-        pages.forEach((page) => page.classList.remove("active"));
-        document.getElementById(pageId).classList.add("active");
+  if (pageId === "browse") {
+    populateMovieRows();
+  }
+}
 
-        if (pageId === "browse") {
-          populateMovieRows();
-        }
-      }
+// Populate movie rows
+function populateMovieRows() {
+  populateRow("trending-row", movies.trending);
+  populateRow("action-row", movies.action);
+  populateRow("comedy-row", movies.comedy);
+  populateRow("documentary-row", movies.documentary);
+}
 
-      // Populate movie rows
-      function populateMovieRows() {
-        populateRow("trending-row", movies.trending);
-        populateRow("action-row", movies.action);
-        populateRow("comedy-row", movies.comedy);
-        populateRow("documentary-row", movies.documentary);
-      }
+function populateRow(rowId, movieList) {
+  const row = document.getElementById(rowId);
+  row.innerHTML = "";
 
-      function populateRow(rowId, movieList) {
-        const row = document.getElementById(rowId);
-        row.innerHTML = "";
+  movieList.forEach((movie) => {
+    const movieCard = createMovieCard(movie);
+    row.appendChild(movieCard);
+  });
+}
 
-        movieList.forEach((movie) => {
-          const movieCard = createMovieCard(movie);
-          row.appendChild(movieCard);
-        });
-      }
+function createMovieCard(movie) {
+  const card = document.createElement("div");
+  card.className = "movie-card";
+  card.onclick = () => showMovieDetail(movie);
 
-      function createMovieCard(movie) {
-        const card = document.createElement("div");
-        card.className = "movie-card";
-        card.onclick = () => showMovieDetail(movie);
-
-        card.innerHTML = `
+  card.innerHTML = `
                 <img src="${movie.image}" alt="${movie.title}">
                 <div class="movie-info">
                     <div class="movie-title">${movie.title}</div>
@@ -1275,161 +683,157 @@
                 </div>
             `;
 
-        return card;
-      }
+  return card;
+}
 
-      // Movie detail page
-      function showMovieDetail(movie) {
-        currentMovie = movie;
-        document.getElementById("movie-title").textContent = movie.title;
-        document.getElementById("movie-description").textContent =
-          movie.description;
+// Movie detail page
+function showMovieDetail(movie) {
+  currentMovie = movie;
+  document.getElementById("movie-title").textContent = movie.title;
+  document.getElementById("movie-description").textContent = movie.description;
 
-        // Set background image
-        const hero = document.getElementById("movie-hero");
-        hero.style.background = `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), ${movie.image}`;
-        hero.style.backgroundSize = "cover";
-        hero.style.backgroundPosition = "center";
+  // Set background image
+  const hero = document.getElementById("movie-hero");
+  hero.style.background = `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), ${movie.image}`;
+  hero.style.backgroundSize = "cover";
+  hero.style.backgroundPosition = "center";
 
-        // Populate similar movies
-        const similarMovies = document.getElementById("similar-movies");
-        similarMovies.innerHTML = "";
+  // Populate similar movies
+  const similarMovies = document.getElementById("similar-movies");
+  similarMovies.innerHTML = "";
 
-        // Get random movies from all categories
-        const allMovies = [
-          ...movies.trending,
-          ...movies.action,
-          ...movies.comedy,
-          ...movies.documentary,
-        ];
-        const randomMovies = allMovies
-          .filter((m) => m.id !== movie.id)
-          .sort(() => 0.5 - Math.random())
-          .slice(0, 12);
+  // Get random movies from all categories
+  const allMovies = [
+    ...movies.trending,
+    ...movies.action,
+    ...movies.comedy,
+    ...movies.documentary,
+  ];
+  const randomMovies = allMovies
+    .filter((m) => m.id !== movie.id)
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 12);
 
-        randomMovies.forEach((movie) => {
-          const card = createMovieCard(movie);
-          similarMovies.appendChild(card);
-        });
+  randomMovies.forEach((movie) => {
+    const card = createMovieCard(movie);
+    similarMovies.appendChild(card);
+  });
 
-        showPage("movie-detail");
-      }
+  showPage("movie-detail");
+}
 
-      // Authentication
-      function handleSignIn(event) {
-        event.preventDefault();
-        const email = event.target.querySelector('input[type="email"]').value;
-        currentUser = { email: email };
-        showPage("browse");
-      }
+// Authentication
+function handleSignIn(event) {
+  event.preventDefault();
+  const email = event.target.querySelector('input[type="email"]').value;
+  currentUser = { email: email };
+  showPage("browse");
+}
 
-      function handleSignUp(event) {
-        event.preventDefault();
-        const firstName = event.target.querySelector(
-          'input[placeholder="First Name"]'
-        ).value;
-        const lastName = event.target.querySelector(
-          'input[placeholder="Last Name"]'
-        ).value;
-        const email = event.target.querySelector('input[type="email"]').value;
+function handleSignUp(event) {
+  event.preventDefault();
+  const firstName = event.target.querySelector(
+    'input[placeholder="First Name"]'
+  ).value;
+  const lastName = event.target.querySelector(
+    'input[placeholder="Last Name"]'
+  ).value;
+  const email = event.target.querySelector('input[type="email"]').value;
 
-        currentUser = {
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-        };
-        showPage("browse");
-      }
+  currentUser = {
+    firstName: firstName,
+    lastName: lastName,
+    email: email,
+  };
+  showPage("browse");
+}
 
-      // Video player
-      function playVideo() {
-        const videoPlayer = document.getElementById("video-player");
-        const video = document.getElementById("main-video");
+// Video player
+function playVideo() {
+  const videoPlayer = document.getElementById("video-player");
+  const video = document.getElementById("main-video");
 
-        // Create a demo video source (placeholder)
-        video.src =
-          "data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAACKBtZGF0AAAC";
+  // Create a demo video source (placeholder)
+  video.src =
+    "data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAACKBtZGF0AAAC";
 
-        videoPlayer.style.display = "flex";
-        video.play();
-      }
+  videoPlayer.style.display = "flex";
+  video.play();
+}
 
-      function closeVideo() {
-        const videoPlayer = document.getElementById("video-player");
-        const video = document.getElementById("main-video");
+function closeVideo() {
+  const videoPlayer = document.getElementById("video-player");
+  const video = document.getElementById("main-video");
 
-        videoPlayer.style.display = "none";
-        video.pause();
-        video.currentTime = 0;
-      }
+  videoPlayer.style.display = "none";
+  video.pause();
+  video.currentTime = 0;
+}
 
-      // My List functionality
-      function addToList() {
-        if (
-          currentMovie &&
-          !myList.find((movie) => movie.id === currentMovie.id)
-        ) {
-          myList.push(currentMovie);
-          alert(`${currentMovie.title} added to your list!`);
-        } else {
-          alert("Movie is already in your list!");
-        }
-      }
+// My List functionality
+function addToList() {
+  if (currentMovie && !myList.find((movie) => movie.id === currentMovie.id)) {
+    myList.push(currentMovie);
+    alert(`${currentMovie.title} added to your list!`);
+  } else {
+    alert("Movie is already in your list!");
+  }
+}
 
-      // Profile dropdown
-      function toggleProfile() {
-        const profileMenu = document.querySelector(".profile-menu");
-        profileMenu.classList.toggle("active");
-      }
+// Profile dropdown
+function toggleProfile() {
+  const profileMenu = document.querySelector(".profile-menu");
+  profileMenu.classList.toggle("active");
+}
 
-      // Search functionality
-      let searchTimeout;
+// Search functionality
+let searchTimeout;
 
-      function toggleSearch() {
-        const searchContainer = document.querySelector(".search-container");
-        const searchInput = document.getElementById("search-input");
+function toggleSearch() {
+  const searchContainer = document.querySelector(".search-container");
+  const searchInput = document.getElementById("search-input");
 
-        searchContainer.classList.toggle("active");
+  searchContainer.classList.toggle("active");
 
-        if (searchContainer.classList.contains("active")) {
-          searchInput.focus();
-        } else {
-          searchInput.value = "";
-          document.getElementById("search-results").innerHTML = "";
-        }
-      }
+  if (searchContainer.classList.contains("active")) {
+    searchInput.focus();
+  } else {
+    searchInput.value = "";
+    document.getElementById("search-results").innerHTML = "";
+  }
+}
 
-      function handleSearch() {
-        const query = document.getElementById("search-input").value;
-        const resultsContainer = document.getElementById("search-results");
+function handleSearch() {
+  const query = document.getElementById("search-input").value;
+  const resultsContainer = document.getElementById("search-results");
 
-        clearTimeout(searchTimeout);
+  clearTimeout(searchTimeout);
 
-        if (query.length < 2) {
-          resultsContainer.innerHTML = "";
-          return;
-        }
+  if (query.length < 2) {
+    resultsContainer.innerHTML = "";
+    return;
+  }
 
-        searchTimeout = setTimeout(() => {
-          const allMovies = [
-            ...movies.trending,
-            ...movies.action,
-            ...movies.comedy,
-            ...movies.documentary,
-          ];
-          const filteredMovies = allMovies.filter(
-            (movie) =>
-              movie.title.toLowerCase().includes(query.toLowerCase()) ||
-              movie.description.toLowerCase().includes(query.toLowerCase())
-          );
+  searchTimeout = setTimeout(() => {
+    const allMovies = [
+      ...movies.trending,
+      ...movies.action,
+      ...movies.comedy,
+      ...movies.documentary,
+    ];
+    const filteredMovies = allMovies.filter(
+      (movie) =>
+        movie.title.toLowerCase().includes(query.toLowerCase()) ||
+        movie.description.toLowerCase().includes(query.toLowerCase())
+    );
 
-          resultsContainer.innerHTML = "";
+    resultsContainer.innerHTML = "";
 
-          if (filteredMovies.length > 0) {
-            filteredMovies.slice(0, 5).forEach((movie) => {
-              const resultItem = document.createElement("div");
-              resultItem.className = "search-result-item";
-              resultItem.innerHTML = `
+    if (filteredMovies.length > 0) {
+      filteredMovies.slice(0, 5).forEach((movie) => {
+        const resultItem = document.createElement("div");
+        resultItem.className = "search-result-item";
+        resultItem.innerHTML = `
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <img src="${movie.image}" alt="${movie.title}" style="width: 40px; height: 60px; object-fit: cover; border-radius: 4px;">
                                 <div>
@@ -1438,179 +842,171 @@
                                 </div>
                             </div>
                         `;
-              resultItem.onclick = () => {
-                showMovieDetail(movie);
-                toggleSearch();
-              };
-              resultsContainer.appendChild(resultItem);
-            });
-          } else {
-            resultsContainer.innerHTML =
-              '<div style="padding: 10px; color: #b3b3b3;">No results found</div>';
-          }
-        }, 300);
-      }
-
-      // Notifications functionality
-      function toggleNotifications() {
-        const notificationsMenu = document.querySelector(".notifications-menu");
-        const badge = document.getElementById("notification-badge");
-
-        notificationsMenu.classList.toggle("active");
-
-        if (notificationsMenu.classList.contains("active")) {
-          // Mark notifications as read
-          badge.style.display = "none";
-        }
-      }
-
-      // Profile functionality
-      function showProfile() {
-        alert("Profile management feature coming soon!");
-      }
-
-      function showAccount() {
-        alert(
-          "Account settings:\n\n• Email: " +
-            (currentUser ? currentUser.email : "Not signed in") +
-            "\n• Subscription: Premium\n• Billing: Monthly"
-        );
-      }
-
-      function showHelp() {
-        alert(
-          "Help Center:\n\n• How to use StreamFlix\n• Billing questions\n• Technical support\n• Contact us\n\nFor more help, visit our website support section."
-        );
-      }
-
-      function signOut() {
-        currentUser = null;
-        myList = [];
-        showPage("signin");
-        alert("You have been signed out successfully!");
-      }
-
-      // Filter content
-      function filterContent(category, query = "") {
-        let filteredMovies = [];
-
-        switch (category) {
-          case "tv":
-            filteredMovies = movies.trending.filter(
-              (movie) =>
-                movie.title.includes("Stranger Things") ||
-                movie.title.includes("The Crown") ||
-                movie.title.includes("Bridgerton")
-            );
-            break;
-          case "movies":
-            filteredMovies = [...movies.action, ...movies.comedy];
-            break;
-          case "new":
-            filteredMovies = movies.trending.filter(
-              (movie) => parseInt(movie.year) >= 2022
-            );
-            break;
-          case "mylist":
-            filteredMovies = myList;
-            break;
-          case "search":
-            const allMovies = [
-              ...movies.trending,
-              ...movies.action,
-              ...movies.comedy,
-              ...movies.documentary,
-            ];
-            filteredMovies = allMovies.filter(
-              (movie) =>
-                movie.title.toLowerCase().includes(query.toLowerCase()) ||
-                movie.description.toLowerCase().includes(query.toLowerCase())
-            );
-            break;
-          default:
-            return;
-        }
-
-        // Clear all rows and show filtered content
-        const rows = [
-          "trending-row",
-          "action-row",
-          "comedy-row",
-          "documentary-row",
-        ];
-        rows.forEach((rowId) => {
-          const row = document.getElementById(rowId);
-          row.innerHTML = "";
-        });
-
-        // Show filtered movies in the first row
-        if (filteredMovies.length > 0) {
-          populateRow("trending-row", filteredMovies);
-
-          // Update the category title
-          const categoryTitle = document.querySelector(".category-title");
-          switch (category) {
-            case "tv":
-              categoryTitle.textContent = "TV Shows";
-              break;
-            case "movies":
-              categoryTitle.textContent = "Movies";
-              break;
-            case "new":
-              categoryTitle.textContent = "New & Popular";
-              break;
-            case "mylist":
-              categoryTitle.textContent = "My List";
-              break;
-            case "search":
-              categoryTitle.textContent = `Search Results for "${query}"`;
-              break;
-          }
-        } else {
-          const row = document.getElementById("trending-row");
-          row.innerHTML =
-            '<p style="color: #b3b3b3; padding: 20px; text-align: center;">No results found</p>';
-        }
-      }
-
-      // Navbar scroll effect
-      window.addEventListener("scroll", () => {
-        const navbar = document.querySelector(".navbar");
-        if (window.scrollY > 50) {
-          navbar.classList.add("scrolled");
-        } else {
-          navbar.classList.remove("scrolled");
-        }
+        resultItem.onclick = () => {
+          showMovieDetail(movie);
+          toggleSearch();
+        };
+        resultsContainer.appendChild(resultItem);
       });
+    } else {
+      resultsContainer.innerHTML =
+        '<div style="padding: 10px; color: #b3b3b3;">No results found</div>';
+    }
+  }, 300);
+}
 
-      // Close dropdowns when clicking outside
-      document.addEventListener("click", (event) => {
-        if (!event.target.closest(".profile-menu")) {
-          document.querySelector(".profile-menu").classList.remove("active");
-        }
-        if (!event.target.closest(".notifications-menu")) {
-          document
-            .querySelector(".notifications-menu")
-            .classList.remove("active");
-        }
-        if (!event.target.closest(".search-container")) {
-          document
-            .querySelector(".search-container")
-            .classList.remove("active");
-        }
-      });
+// Notifications functionality
+function toggleNotifications() {
+  const notificationsMenu = document.querySelector(".notifications-menu");
+  const badge = document.getElementById("notification-badge");
 
-      // Keyboard navigation
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-          closeVideo();
-        }
-      });
+  notificationsMenu.classList.toggle("active");
 
-      // Initialize
-      window.onload = () => {
-        showPage("landing");
-      };
-    </script>
+  if (notificationsMenu.classList.contains("active")) {
+    // Mark notifications as read
+    badge.style.display = "none";
+  }
+}
+
+// Profile functionality
+function showProfile() {
+  alert("Profile management feature coming soon!");
+}
+
+function showAccount() {
+  alert(
+    "Account settings:\n\n• Email: " +
+      (currentUser ? currentUser.email : "Not signed in") +
+      "\n• Subscription: Premium\n• Billing: Monthly"
+  );
+}
+
+function showHelp() {
+  alert(
+    "Help Center:\n\n• How to use StreamFlix\n• Billing questions\n• Technical support\n• Contact us\n\nFor more help, visit our website support section."
+  );
+}
+
+function signOut() {
+  currentUser = null;
+  myList = [];
+  showPage("signin");
+  alert("You have been signed out successfully!");
+}
+
+// Filter content
+function filterContent(category, query = "") {
+  let filteredMovies = [];
+
+  switch (category) {
+    case "tv":
+      filteredMovies = movies.trending.filter(
+        (movie) =>
+          movie.title.includes("Stranger Things") ||
+          movie.title.includes("The Crown") ||
+          movie.title.includes("Bridgerton")
+      );
+      break;
+    case "movies":
+      filteredMovies = [...movies.action, ...movies.comedy];
+      break;
+    case "new":
+      filteredMovies = movies.trending.filter(
+        (movie) => parseInt(movie.year) >= 2022
+      );
+      break;
+    case "mylist":
+      filteredMovies = myList;
+      break;
+    case "search":
+      const allMovies = [
+        ...movies.trending,
+        ...movies.action,
+        ...movies.comedy,
+        ...movies.documentary,
+      ];
+      filteredMovies = allMovies.filter(
+        (movie) =>
+          movie.title.toLowerCase().includes(query.toLowerCase()) ||
+          movie.description.toLowerCase().includes(query.toLowerCase())
+      );
+      break;
+    default:
+      return;
+  }
+
+  // Clear all rows and show filtered content
+  const rows = ["trending-row", "action-row", "comedy-row", "documentary-row"];
+  rows.forEach((rowId) => {
+    const row = document.getElementById(rowId);
+    row.innerHTML = "";
+  });
+
+  // Show filtered movies in the first row
+  if (filteredMovies.length > 0) {
+    populateRow("trending-row", filteredMovies);
+
+    // Update the category title
+    const categoryTitle = document.querySelector(".category-title");
+    switch (category) {
+      case "tv":
+        categoryTitle.textContent = "TV Shows";
+        break;
+      case "movies":
+        categoryTitle.textContent = "Movies";
+        break;
+      case "new":
+        categoryTitle.textContent = "New & Popular";
+        break;
+      case "mylist":
+        categoryTitle.textContent = "My List";
+        break;
+      case "search":
+        categoryTitle.textContent = `Search Results for "${query}"`;
+        break;
+    }
+  } else {
+    const row = document.getElementById("trending-row");
+    row.innerHTML =
+      '<p style="color: #b3b3b3; padding: 20px; text-align: center;">No results found</p>';
+  }
+}
+
+// Navbar scroll effect
+window.addEventListener("scroll", () => {
+  const navbar = document.querySelector(".navbar");
+  if (window.scrollY > 50) {
+    navbar.classList.add("scrolled");
+  } else {
+    navbar.classList.remove("scrolled");
+  }
+});
+
+// Close dropdowns when clicking outside
+document.addEventListener("click", (event) => {
+  if (!event.target.closest(".profile-menu")) {
+    document.querySelector(".profile-menu").classList.remove("active");
+  }
+  if (!event.target.closest(".notifications-menu")) {
+    document.querySelector(".notifications-menu").classList.remove("active");
+  }
+  if (!event.target.closest(".search-container")) {
+    document.querySelector(".search-container").classList.remove("active");
+  }
+});
+
+// Keyboard navigation
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeVideo();
+  }
+});
+
+// Initialize
+window.onload = () => {
+  showPage("landing");
+};
+</script>
+   
   </body>
 </html>
